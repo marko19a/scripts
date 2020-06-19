@@ -1,4 +1,5 @@
 import re
+import os
 import subprocess
 
 file = open('/proc/meminfo', 'r')
@@ -12,17 +13,12 @@ file = open('/proc/cpuinfo')
 lines = file.readlines()
 
 mhz = float(re.search(r'\d+', lines[7]).group())
-'''
-file.close()
-file = open('/proc/stat')
-line = file.readline()
 
-values = re.findall(r'\d+', line)
+CPU_Pct = str(round(
+    float(os.popen('''grep 'cpu ' /proc/stat | awk '{usage=($2+$4)*100/($2+$4+$5)} END {print usage }' ''').readline()),
+    2))
 
-values = [int(v) for v in values]
-
-p = (values[3] * 20) / (sum(values[:3]) + sum(values[4:]))
-'''
 file.close()
 subprocess.call(
-    ['notify-send', 'Memory', 'MEM: %.2f (%d%s) | CPU: %d MHz' % (av, int(av / total * 100), '%', mhz)])
+    ['notify-send', 'Memory',
+     'M: %.2f (%d%s) | C: %d MHz' % (av, int(av / total * 100), '%', mhz)])
