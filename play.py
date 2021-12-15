@@ -24,7 +24,7 @@ if len(sys.argv) == 1:
     with open(play_file, 'r') as f:
         line = f.readline()
 
-    x = re.search('E|e\d\d', line)
+    x = re.search('[eE]\d\d', line)
     x = x.span()[0] + 1
     ep = int(line[x:x+2]) + 1
 
